@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<header class="banner" role="banner">
+  <div class="container">
+    <div class="row">
+       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <img src="https://www.usinestreet.fr/blog/wp-content/uploads/2019/05/idees-inspiration-decoration.jpg" style="max-width: 100%;">
+       </div>
+    </div>
+  </div>
+</header>
+<div class="container d-flex justify-content-between align-item-center mt-5 mb-3">
+<div class="card" style="width: 18rem;border:none;">
+
+  <div class="card-body text-center">
+    <i class="icon fa-solid fa-check"></i>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+   
+  </div>
+</div>
+<div class="card mt-3" style="width: 18rem;border:none;">
+ 
+  <div class="card-body text-center">
+<i class="icon fa-brands fa-font-awesome"></i>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+   
+  </div>
+</div>
+<div class="card mt-3" style="width: 18rem; border:none;">
+  
+  <div class="card-body text-center">
+  <div>
+   <i class="icon fa-brands fa-jedi-order"></i>
+   </div>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  </div>
+</div>
+</div>
+
+        <!-- START THE FEATURETTES -->
+
+        <hr class="featurette-divider">
+{% for product in products %}
+        <div class="row featurette">
+            <div class="col-md-7">
+                <h2 class="featurette-heading mt-3">{{product.name}}</span></h2>
+                <p class="lead">{{product.description}}</p>
+            </div>
+            <div class="col-md-5">
+                <img class="homeImg img-fluid mx-auto" width="400" height="300" src="/uploads/{{ product.photo}}" />
+            </div>
+        </div>
+         <hr class="featurette-divider">
+{% endfor %}
+       
+{% endblock %}
+
+

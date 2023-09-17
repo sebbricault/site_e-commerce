@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier {% endblock %}
+
+{% block content %}
+<h1>Mon panier</h1>
+Retrouver l'ensemble des produit que vous avez ajouté à votre panier
+{% if panier|length > 0 %}
+<table class="table mt-3">
+  <thead>
+    <tr>
+      <th scope="col">Produit</th>
+      <th></th>
+      <th scope="col">Quantité</th>
+      <th scope="col">Prix</th>
+      <th scope="col">Total</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% set total = null %}
+  {% for product in panier %}
+    <tr>
+      <th>
+      <img src="/uploads/{{ product.product.photo}}" alt="{{ product.product.name}}" height="75"><br/>
+     </th>
+     <td>{{ product.product.name }}<br/>
+     </td>
+     <td><a href="{{path('decrement_panier',{'id':product.product.id})}}"><i class="fa-solid fa-minus mr-2 text-danger"></i></a>
+      x {{ product.quantity }}
+       <a href="{{path('app_add_panier',{'id':product.product.id})}}"><i class="fa-solid fa-plus ml-2"></i></a></td>
+      <td>{{ (product.product.prix / 100)| number_format(2,',','.')}} €</td>
+      <td>{{ ((product.product.prix * product.quantity) / 100)| number_format(2,',','.')}} €</td>
+      <td><a href="{{path('app_delete_panier',{'id':product.product.id})}}" class="btn"><i class="fa fa-trash text-danger "></i></a></td>
+    </tr>
+    {% set total = total + (product.product.prix * product.quantity) %}
+    {% endfor %}
+   
+  </tbody>
+</table>
+<div class="text-right mb-5">
+<b>Nombre de produit :</b>  {{ panier|length }}<br/>
+<b>Total de mon panier :</b>  {{  (total / 100)| number_format(2,',','.') }}€
+<a href="{{path('app_commande')}}" class="btn btn-dark btn-block mt-5">Valider mon panier</a>
+</div>
+{% else %}
+<hr>
+<p><b>Votre panier est vide</b></p>
+{% endif %}
+{% endblock %}

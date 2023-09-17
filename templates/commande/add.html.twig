@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+{% block javascript %}
+    <script src="https://js.stripe.com/v3/"></script>{% endblock %}
+
+{% block title %}Paiment de ma commandes !{% endblock %}
+
+{% block content %}
+ {% for message in app.flashes('success') %}
+                            <div 
+                                style="color: green;
+                                    border: 2px green solid;
+                                    text-align: center;
+                                    padding: 5px;margin-bottom: 10px;">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+<h1>Paiment de ma commande</h1>
+<p>verifier les information avant le paiment de votre commande</p>
+<hr>
+<div class="row">
+        <div class="col-md-6">
+        <div class="form-check">
+       Mon adresse de livraison<br/>
+       {{Contenu_livraison|raw}}
+        </div>
+       <hr>
+        <div class="form-check">
+       Mon mode de livraison
+       {{modelivraison.nom}}<br/>
+          {{modelivraison.description}}<br/>
+          {{modelivraison.prix| number_format(2,',','.')}}€<br/>
+        </div>
+        </div>
+         <div class="col-md-6">
+         {% set total = null %}
+         <h3>ma commande</h3>
+          {% for product in panier %}
+          <div class="row mb-4 mt-4">
+          <div class="col-2"><img src="/uploads/{{ product.product.photo}}" alt="{{ product.product.name}}" height="75"></div>
+           <div class="co-6 my-auto">{{product.product.name}}<br/>
+           x {{product.quantity}}</div>
+           <div class="col-2 my-auto"> {{ ((product.product.prix * product.quantity) / 100)| number_format(2,',','.')}}€ </div>
+          </div>
+          
+              {% set total = total + (product.product.prix * product.quantity) %}
+
+
+          {% endfor %}
+          <hr>
+          <strong>Sous-Total :</strong>  {{  (total / 100)| number_format(2,',','.') }}€ <br/>
+           <strong>Livraison :</strong> {{  (modelivraison.prix)| number_format(2,',','.') }}€ 
+           <hr/>
+            <strong>Total :</strong> {{  ((total / 100) + modelivraison.prix)| number_format(2,',','.') }}€ <br/>
+             <form id='checkout-form' method='post' action="{{ path('app_stripe_charge') }}">             
+                            <input type='hidden' name='stripeToken' id='stripe-token-id'>
+<div id="card-element" class="form-control" ></div>
+<a id='pay-btn'onclick="createToken()" class="btn btn-dark btn-block mt-3 mb-3 ">Payer | {{  ((total / 100) + modelivraison.prix)| number_format(2,',','.') }}€ </a>
+<form>
+        </div>
+        
+       <script>
+        var stripe = Stripe('pk_test_51MHUYSDrqZtdbjt7BbxC5kXHp5FaMcdgCMBc25FYqNDYJ8OwltsGQsHmks2bKy9eHJIpQhLtkJQ6NXRDhc2YrwnJ008bUhcUmh');
+        var elements = stripe.elements();
+        var cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+     
+        function createToken() {
+            document.getElementById("pay-btn").disabled = true;
+            stripe.createToken(cardElement).then(function(result) {
+     
+                     
+                if(typeof result.error != 'undefined') {
+                    document.getElementById("pay-btn").disabled = false;
+                    alert(result.error.message);
+                }
+     
+                // creating token success
+                if(typeof result.token != 'undefined') {
+                    document.getElementById("stripe-token-id").value = result.token.id;
+                    document.getElementById('checkout-form').submit();
+                     alert("merci pour votre achat");
+                }
+            });
+        }
+    </script>
+</div>
+{% endblock %}

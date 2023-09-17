@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<h2>Nos produits</h2>
+<hr/>
+<div class="row d-flex ">
+<div class="cold-md-3 mr-5">
+
+
+</div>
+
+<div class="col-md-9 row product-container  justify-content-between align-items-center">
+
+{% for product in products %}
+    <div class="product-item text-center ">
+        <a href="{{ path('product',{'slug': product.slug,'id': product.id})}}"><img src="/uploads/{{ product.photo}}" alt="{{ product.name}}" class="img-top"></a>
+        <h5>{{product.name}}</h5>
+         <span class="product-price">{{(product.prix / 100)| number_format(2,',','.')}}€</span>
+    </div>
+{% endfor %}
+
+</div>
+</div>
+{% endblock %}
+

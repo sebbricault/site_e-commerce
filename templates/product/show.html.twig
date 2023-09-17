@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{product.name}} - La Boutique Française{% endblock %}
+
+{% block content %}
+
+<div class="row mb-5">
+    <div class="col-md-5">
+         <img src="/uploads/{{ product.photo}}" alt="{{ product.name}}" clas="img-fluid" width="400px" height="300px">
+    </div>
+    <div class="col-md-7 my-auto">
+        <h3>{{product.name}}</h3>
+      
+         <span class="product-price">{{(product.prix / 100)| number_format(2,',','.')}}€</span>
+        <hr>
+        <p>{{product.description}}</p>
+        {% if app.user %} 
+    <a href="{{path('app_add_panier',{'id': product.id })}}" class="btn  btn-dark">Ajouter au panier</a>
+         {% else %} 
+         <a href="{{path('app_login')}}" class="btn  btn-dark">Connexion </a> 
+         {% endif %} 
+    </div>
+</div>
+<div class="container">
+{{form(form)}}
+ {% if commentaire == null %}
+ <p>pas d'avis sur ce produit</p>
+   {% else %}
+<table class="table">
+  <thead>
+    <tr>
+      
+      <th scope="col">Prenom</th>
+      <th scope="col">date</th>
+      <th scope="col">message</th>
+    </tr>
+  </thead>
+   <tbody>
+  
+{% for comm in commentaire %}
+   <tr>
+    
+      <td>{{comm.name}}</td>
+      <td>{{comm.createdAt|date("d/m/Y H:i")}}</td>
+      <td>{{comm.message}}</td>
+    </tr>
+
+{% endfor %}
+ </tbody>
+</table>
+{% endif %}
+</div>
+
+
+
+
+{% endblock %}
